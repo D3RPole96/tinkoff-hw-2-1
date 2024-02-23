@@ -1,0 +1,25 @@
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tinkoff_hw_database
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:/db/changelog/db-changelog.xml
+    enabled: true
+    drop-first: false
+    default-schema: public
+  graphql:
+    graphiql:
+      enabled: true
+    path: /graphql
+
+server:
+  port: 8080
+  address: localhost
+
