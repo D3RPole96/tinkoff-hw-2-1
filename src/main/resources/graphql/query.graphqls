@@ -2,7 +2,7 @@ type Query {
     getUserById(id: Int!): UserResponseDto!
     getUserByUsername(username: String!): UserResponseDto
     getAllUsers: [UserResponseDto!]!
-    addNewUser(userCreateDto: UserCreateDto!): UserResponseDto
+    addNewUser(userCreateDto: UserCreateDto!): UserResponseDto!
     deleteUserById(id: Int!): UserResponseDto
     deleteUserByUsername(username: String!): UserResponseDto
 

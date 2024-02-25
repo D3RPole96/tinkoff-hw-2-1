@@ -49,8 +49,8 @@ public class UserController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    @SchemaMapping
-    public UserResponseDto addNewUser(@RequestBody @Valid UserCreateDto userCreateDto) {
+    @QueryMapping
+    public UserResponseDto addNewUser(@Argument @RequestBody @Valid UserCreateDto userCreateDto) {
         var user = userMapper.toUserEntity(userCreateDto);
         return userMapper.toUserResponseDto(userService.addNewUser(user));
     }
