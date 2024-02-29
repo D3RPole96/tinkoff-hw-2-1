@@ -5,7 +5,7 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:postgresql://localhost:5432/tinkoff_hw_db
+    url: jdbc:postgresql://localhost:7432/tinkoff-hw-db
     username: postgres
     password: postgres
     driverClassName: org.postgresql.Driver

@@ -1,25 +1,27 @@
 version: '3.5'
 services:
   service-back:
-    image: tinkoff-ab-hw-2-1-back:0.0.1
+    image: kyultex/tinkoff-ab-hw-2-1-back:0.0.2
     container_name: backend-service-container
-    build: .
+    build:
+       context: .
+       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8181:8080"
     depends_on:
       - postgres
     environment:
       - SERVER_PORT=8080
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres/tinkoff_hw_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres/tinkoff-hw-db
   postgres:
     image: postgres:15.6-alpine
     container_name: postgres-container
     environment:
-      POSTGRES_DB: tinkoff_hw_db
+      POSTGRES_DB: tinkoff-hw-db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "7432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
