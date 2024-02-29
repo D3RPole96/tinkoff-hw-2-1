@@ -57,13 +57,13 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @QueryMapping
-    public void deleteUserById(@Argument @PathVariable @NotNull @Min(0) Integer id) {
-        userService.deleteUserById(id);
+    public UserResponseDto deleteUserById(@Argument @PathVariable @NotNull @Min(0) Integer id) {
+        return userMapper.toUserResponseDto(userService.deleteUserById(id));
     }
 
     @DeleteMapping("/username/{username}")
     @QueryMapping
-    public void deleteUserByUsername(@Argument @PathVariable @NotBlank @NotNull @Size(max = 255) String username) {
-        userService.deleteUserByUsername(username);
+    public UserResponseDto deleteUserByUsername(@Argument @PathVariable @NotBlank @NotNull @Size(max = 255) String username) {
+        return userMapper.toUserResponseDto(userService.deleteUserByUsername(username));
     }
 }

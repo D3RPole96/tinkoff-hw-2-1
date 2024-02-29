@@ -41,12 +41,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserById(Integer id) {
+    public UserEntity deleteUserById(Integer id) {
+        var deletedUser = getUserById(id);
         userRepository.deleteById(id);
+
+        return deletedUser;
     }
 
     @Override
-    public void deleteUserByUsername(String username) {
+    public UserEntity deleteUserByUsername(String username) {
+        var deletedUser = getUserByUsername(username);
         userRepository.deleteByUsername(username);
+
+        return deletedUser;
     }
 }

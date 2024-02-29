@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   service-back:
-    image: kyultex/tinkoff-ab-hw-2-1-back:0.0.2
+    image: kyultex/tinkoff-ab-hw-2-1-back:0.0.3
     container_name: backend-service-container
     build:
        context: .
