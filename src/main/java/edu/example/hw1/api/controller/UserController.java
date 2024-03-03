@@ -1,7 +1,9 @@
 package edu.example.hw1.api.controller;
 
+import edu.example.hw1.api.dto.ImageDto;
 import edu.example.hw1.api.dto.UserCreateDto;
 import edu.example.hw1.api.dto.UserResponseDto;
+import edu.example.hw1.api.mapper.ImageMapper;
 import edu.example.hw1.api.mapper.UserMapper;
 import edu.example.hw1.domain.entity.UserEntity;
 import edu.example.hw1.domain.service.UserService;
@@ -27,6 +29,7 @@ import java.util.List;
 @Validated
 public class UserController {
     private final UserMapper userMapper;
+    private final ImageMapper imageMapper;
     private final UserService userService;
 
     @GetMapping("/{id}")
@@ -45,6 +48,11 @@ public class UserController {
     @QueryMapping
     public List<UserResponseDto> getAllUsers() {
         return userMapper.toUserResponseDtoList(userService.getAllUsers());
+    }
+
+    @GetMapping("/{userId}/images")
+    public List<ImageDto> getUserImages(@PathVariable @NotNull @Min(0) Integer userId) {
+        return imageMapper.imagesToImageDtos(userService.getUserImages(userId));
     }
 
     @PostMapping()

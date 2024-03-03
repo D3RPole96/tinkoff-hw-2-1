@@ -8,6 +8,8 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,4 +35,11 @@ public class UserEntity {
 
     @Column(name = "creation_time")
     private LocalDateTime creationTime;
+
+    @OneToMany
+    @JoinTable(
+            name = "user_images",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id"))
+    private List<Image> images = new ArrayList<>();
 }

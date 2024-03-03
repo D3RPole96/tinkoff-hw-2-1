@@ -44,6 +44,11 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         return handleException(dataIntegrityViolationException.getCause().getLocalizedMessage(), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException illegalArgumentException) {
+        return handleException(illegalArgumentException.getCause().getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     private ResponseEntity<Object> handleException(String exceptionMessage, HttpStatusCode status) {
         Map<String, Object> body = new HashMap<>();
 
