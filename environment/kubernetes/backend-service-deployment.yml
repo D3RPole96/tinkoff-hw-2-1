@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend-service-container
-          image: kyultex/tinkoff-ab-hw-2-1-back:0.0.3
+          image: kyultex/tinkoff-ab-hw-2-1-back:0.0.4
           ports:
             - containerPort: 8080
           env:

@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   service-back:
-    image: kyultex/tinkoff-ab-hw-2-1-back:0.0.3
+    image: kyultex/tinkoff-ab-hw-2-1-back:0.0.4
     container_name: backend-service-container
     build:
        context: .
@@ -10,9 +10,16 @@ services:
       - "8181:8080"
     depends_on:
       - postgres
+      - mongodb
+      - redis
+      - minio
     environment:
       - SERVER_PORT=8080
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres/tinkoff-hw-db
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb/tinkoff-hw-mongodb
+      - SPRING_DATA_REDIS_HOST=redis
+      - MINIO_URL=minio
+
   postgres:
     image: postgres:15.6-alpine
     container_name: postgres-container
@@ -21,10 +28,50 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "7432:5432"
+      - "15432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-container
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: tinkoff-hw-mongodb
+    volumes:
+      - ./environment/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - tinkoff-hw-mongodb:/data/db
+      - tinkoff-hw-mongo-config:/data/configdb
+
+  redis:
+    image: redis:7.2-rc-alpine
+    restart: always
+    container_name: redis-container
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --logLevel warning --requirepass YXNkZmFzZGY=
+    volumes:
+      - tinkoff-hw-redis:/data
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio-container
+    environment:
+      MINIO_ROOT_USER: user
+      MINIO_ROOT_PASSWORD: password
+    volumes:
+      - ./environment/minio/data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address :9001
+
 volumes:
   db-data:
-
+  tinkoff-hw-db:
+  tinkoff-hw-mongodb:
+  tinkoff-hw-mongo-config:
+  tinkoff-hw-redis:
+  storage-minio:

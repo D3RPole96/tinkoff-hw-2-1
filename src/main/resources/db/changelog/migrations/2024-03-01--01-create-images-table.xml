@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="2024-03-01--01-create-images-table" author="kyultex">
+        <preConditions>
+            <not>
+                <tableExists tableName="images"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="images">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="image_id_pk"/>
+            </column>
+
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="size" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="link" type="varchar(300)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_images">
+            <column name="user_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="image_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="user_images"
+                       columnNames="user_id, image_id"
+                       constraintName="user_images_pk"/>
+
+        <addForeignKeyConstraint
+                baseTableName="user_images"
+                baseColumnNames="user_id"
+                constraintName="user_images_user_fk"
+                referencedTableName="users"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="user_images"
+                baseColumnNames="image_id"
+                constraintName="user_images_images_fk"
+                referencedTableName="images"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="2024-03-01--01-create-image_id_sequence" author="kyultex">
+        <createSequence sequenceName="image_id_seq"
+                        startValue="1"
+                        incrementBy="1"/>
+    </changeSet>
+
+</databaseChangeLog>

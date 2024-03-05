@@ -7,7 +7,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "users")
 @Accessors(chain = true)
-public class UserEntity {
+public class UserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
     @SequenceGenerator(name = "users_seq", sequenceName = "user_id_seq", allocationSize = 1)
@@ -33,4 +36,11 @@ public class UserEntity {
 
     @Column(name = "creation_time")
     private LocalDateTime creationTime;
+
+    @OneToMany
+    @JoinTable(
+            name = "user_images",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id"))
+    private List<ImageEntity> imageEntities = new ArrayList<>();
 }
