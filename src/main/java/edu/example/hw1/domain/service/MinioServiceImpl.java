@@ -1,7 +1,7 @@
 package edu.example.hw1.domain.service;
 
 import edu.example.hw1.config.MinioProperties;
-import edu.example.hw1.domain.entity.Image;
+import edu.example.hw1.domain.entity.ImageEntity;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.UUID;
 
 @Service
@@ -21,12 +20,13 @@ public class MinioServiceImpl implements MinioService {
     private final MinioProperties properties;
 
     @Override
-    public Image uploadImage(MultipartFile file) throws Exception {
+    public ImageEntity uploadImage(MultipartFile file) throws Exception {
         var fileId = UUID.randomUUID().toString();
 
-        InputStream inputStream = new ByteArrayInputStream(file.getBytes());
+        var inputStream = new ByteArrayInputStream(file.getBytes());
         client.putObject(
-                PutObjectArgs.builder()
+                PutObjectArgs
+                        .builder()
                         .bucket(properties.getBucket())
                         .object(fileId)
                         .stream(inputStream, file.getSize(), properties.getImageSize())
@@ -34,7 +34,7 @@ public class MinioServiceImpl implements MinioService {
                         .build()
         );
 
-        return new Image().setName(file.getOriginalFilename()).setSize(file.getSize()).setLink(fileId);
+        return new ImageEntity().setName(file.getOriginalFilename()).setSize(file.getSize()).setLink(fileId);
     }
 
     @Override

@@ -5,7 +5,7 @@ import edu.example.hw1.api.dto.UserCreateDto;
 import edu.example.hw1.api.dto.UserResponseDto;
 import edu.example.hw1.api.mapper.ImageMapper;
 import edu.example.hw1.api.mapper.UserMapper;
-import edu.example.hw1.domain.entity.UserEntity;
+import edu.example.hw1.domain.service.ImageService;
 import edu.example.hw1.domain.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -15,11 +15,10 @@ import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -31,6 +30,7 @@ public class UserController {
     private final UserMapper userMapper;
     private final ImageMapper imageMapper;
     private final UserService userService;
+    private final ImageService imageService;
 
     @GetMapping("/{id}")
     @QueryMapping
@@ -47,19 +47,25 @@ public class UserController {
     @GetMapping()
     @QueryMapping
     public List<UserResponseDto> getAllUsers() {
-        return userMapper.toUserResponseDtoList(userService.getAllUsers());
+        return userMapper.userEntitiesToUserResponseDtos(userService.getAllUsers());
     }
 
     @GetMapping("/{userId}/images")
     public List<ImageDto> getUserImages(@PathVariable @NotNull @Min(0) Integer userId) {
-        return imageMapper.imagesToImageDtos(userService.getUserImages(userId));
+        return imageMapper.imageEntitiesToImageDtos(imageService.getUserImages(userId));
+    }
+
+    @PostMapping("/{userId}/image")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ImageDto getUserImages(@RequestParam MultipartFile file, @PathVariable @NotNull @Min(0) Integer userId) throws Exception {
+        return imageMapper.imageEntityToImageDto(imageService.uploadImageToUser(file, userId));
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     @QueryMapping
     public UserResponseDto addNewUser(@Argument @RequestBody @Valid UserCreateDto userCreateDto) {
-        var user = userMapper.toUserEntity(userCreateDto);
+        var user = userMapper.userCreateDtoToUserEntity(userCreateDto);
         return userMapper.toUserResponseDto(userService.addNewUser(user));
     }
 

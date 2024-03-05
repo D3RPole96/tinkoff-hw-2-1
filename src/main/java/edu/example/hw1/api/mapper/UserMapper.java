@@ -11,9 +11,9 @@ import java.util.List;
 public interface UserMapper {
     UserResponseDto toUserResponseDto(UserEntity userEntity);
 
-    UserEntity toUserEntity(UserCreateDto userCreateDto);
+    UserEntity userCreateDtoToUserEntity(UserCreateDto userCreateDto);
 
-    default List<UserResponseDto> toUserResponseDtoList(List<UserEntity> userEntities) {
+    default List<UserResponseDto> userEntitiesToUserResponseDtos(List<UserEntity> userEntities) {
         return userEntities.stream().map(this::toUserResponseDto).toList();
     }
 }

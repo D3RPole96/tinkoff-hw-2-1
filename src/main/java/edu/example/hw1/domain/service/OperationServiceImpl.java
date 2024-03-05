@@ -2,8 +2,8 @@ package edu.example.hw1.domain.service;
 
 import edu.example.hw1.api.dto.OperationDto;
 import edu.example.hw1.api.mapper.OperationMapper;
-import edu.example.hw1.domain.entity.Operation;
-import edu.example.hw1.domain.entity.Operation.OperationType;
+import edu.example.hw1.domain.entity.OperationEntity;
+import edu.example.hw1.domain.entity.OperationEntity.OperationType;
 import edu.example.hw1.repository.OperationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,12 +18,12 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public void logOperation(OperationDto operationDto) {
-        var operation = operationMapper.operationDtoToOperation(operationDto);
+        var operation = operationMapper.operationDtoToOperationEntity(operationDto);
         operationRepository.save(operation);
     }
 
     @Override
-    public List<Operation> getOperationsByType(OperationType type) {
+    public List<OperationEntity> getOperationsByType(OperationType type) {
         return operationRepository.findAllByType(type);
     }
 }

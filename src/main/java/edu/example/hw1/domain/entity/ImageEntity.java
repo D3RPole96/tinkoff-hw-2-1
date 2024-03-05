@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
 @Data
 @Entity
 @Table(name = "images")
 @Accessors(chain = true)
-public class Image {
+public class ImageEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "images_seq")
     @SequenceGenerator(name = "images_seq", sequenceName = "image_id_seq", allocationSize = 1)

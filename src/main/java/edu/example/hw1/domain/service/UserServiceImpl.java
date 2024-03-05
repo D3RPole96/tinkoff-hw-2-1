@@ -2,9 +2,8 @@ package edu.example.hw1.domain.service;
 
 import edu.example.hw1.api.dto.OperationDto;
 import edu.example.hw1.api.exceptions.EntityNotFoundException;
-import edu.example.hw1.domain.entity.Image;
-import edu.example.hw1.domain.entity.Operation;
-import edu.example.hw1.domain.entity.Operation.OperationType;
+import edu.example.hw1.domain.entity.ImageEntity;
+import edu.example.hw1.domain.entity.OperationEntity.OperationType;
 import edu.example.hw1.domain.entity.UserEntity;
 import edu.example.hw1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -57,26 +56,6 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    @Cacheable(value = "UserService::getUserImages", key = "#id + '.images'")
-    @Override
-    public List<Image> getUserImages(int id) {
-        var user = userRepository
-                .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Пользователь с указанным именем пользователя не найден"));
-
-        var images = user.getImages();
-
-        operationService.logOperation(
-                new OperationDto(
-                        String.format("Read user images: %s", images),
-                        LocalDateTime.now(ZoneOffset.UTC).toString(),
-                        OperationType.READ.toString()
-                )
-        );
-
-        return images;
-    }
-
     @Cacheable(value = "UserService::getAllUsers")
     @Override
     public List<UserEntity> getAllUsers() {
@@ -93,7 +72,6 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
-    @Cacheable(value = "UserService::addNewUser", key = "#user.username")
     @Override
     public UserEntity addNewUser(UserEntity user) {
         user.setCreationTime(LocalDateTime.now(ZoneOffset.UTC));

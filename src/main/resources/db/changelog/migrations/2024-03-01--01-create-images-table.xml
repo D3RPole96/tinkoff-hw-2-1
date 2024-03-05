@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet id="create-images-table" author="kyultex">
+    <changeSet id="2024-03-01--01-create-images-table" author="kyultex">
         <preConditions>
             <not>
                 <tableExists tableName="images"/>
@@ -31,11 +31,11 @@
         </createTable>
 
         <createTable tableName="user_images">
-            <column name="user_id" type="int">
+            <column name="user_id" type="integer">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="image_id" type="int">
+            <column name="image_id" type="integer">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -45,21 +45,21 @@
                        constraintName="user_images_pk"/>
 
         <addForeignKeyConstraint
-                baseTableName="user_id"
-                baseColumnNames="user_images"
+                baseTableName="user_images"
+                baseColumnNames="user_id"
                 constraintName="user_images_user_fk"
-                referencedTableName="id"
-                referencedColumnNames="user"/>
+                referencedTableName="users"
+                referencedColumnNames="id"/>
 
         <addForeignKeyConstraint
-                baseTableName="image_id"
-                baseColumnNames="user_images"
+                baseTableName="user_images"
+                baseColumnNames="image_id"
                 constraintName="user_images_images_fk"
-                referencedTableName="id"
-                referencedColumnNames="images"/>
+                referencedTableName="images"
+                referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="2024-03-01--01-create-user-id-sequence" author="kyultex">
+    <changeSet id="2024-03-01--01-create-image_id_sequence" author="kyultex">
         <createSequence sequenceName="image_id_seq"
                         startValue="1"
                         incrementBy="1"/>

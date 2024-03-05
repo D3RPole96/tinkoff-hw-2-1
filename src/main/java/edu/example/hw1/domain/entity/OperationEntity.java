@@ -1,6 +1,5 @@
 package edu.example.hw1.domain.entity;
 
-import edu.example.hw1.api.dto.OperationDto;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 @Document
 @AllArgsConstructor
 @Accessors(chain = true)
-public class Operation {
+public class OperationEntity {
     @Id
     private String id;
     private String content;

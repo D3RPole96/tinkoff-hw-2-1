@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/images")
 @RequiredArgsConstructor
@@ -16,8 +18,13 @@ public class ImageController {
     private final ImageMapper imageMapper;
 
     @PostMapping("/load")
-    public ImageDto loadImage(MultipartFile file) throws Exception {
-        return imageMapper.imageToImageDto(imageService.uploadImage(file));
+    public ImageDto loadImage(@RequestParam MultipartFile file) throws Exception {
+        return imageMapper.imageEntityToImageDto(imageService.uploadImage(file));
+    }
+
+    @GetMapping()
+    public List<ImageDto> getAllImages() {
+        return imageMapper.imageEntitiesToImageDtos(imageService.getAllImages());
     }
 
     @GetMapping(value = "/{link}", produces = MediaType.IMAGE_PNG_VALUE)
@@ -27,6 +34,6 @@ public class ImageController {
 
     @GetMapping("/{id}/meta")
     public ImageDto getMeta(@PathVariable int id) {
-        return imageMapper.imageToImageDto(imageService.getImageMeta(id));
+        return imageMapper.imageEntityToImageDto(imageService.getImageMeta(id));
     }
 }

@@ -1,17 +1,16 @@
 package edu.example.hw1.domain.service;
 
-import edu.example.hw1.domain.entity.Image;
-import jakarta.persistence.Cacheable;
+import edu.example.hw1.domain.entity.ImageEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 public interface ImageService {
     boolean existsAll(List<Integer> imagesId);
-    List<Image> getAllImages(List<Integer> imagesId);
-    Image getImageMeta(int id);
+    List<ImageEntity> getAllImages();
+    ImageEntity getImageMeta(int id);
     byte[] downloadImage(String link) throws Exception;
-    Image uploadImage(MultipartFile file) throws Exception;
+    ImageEntity uploadImage(MultipartFile file) throws Exception;
+    ImageEntity uploadImageToUser(MultipartFile file, Integer userId) throws Exception;
+    List<ImageEntity> getUserImages(int userId);
 }

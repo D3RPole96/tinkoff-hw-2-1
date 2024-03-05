@@ -10,9 +10,15 @@ services:
       - "8181:8080"
     depends_on:
       - postgres
+      - mongodb
+      - redis
+      - minio
     environment:
       - SERVER_PORT=8080
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres/tinkoff-hw-db
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb/tinkoff-hw-mongodb
+      - SPRING_DATA_REDIS_HOST=redis
+      - MINIO_URL=minio
 
   postgres:
     image: postgres:15.6-alpine
@@ -61,6 +67,7 @@ services:
       - "9000:9000"
       - "9001:9001"
     command: server /data --console-address :9001
+
 volumes:
   db-data:
   tinkoff-hw-db:

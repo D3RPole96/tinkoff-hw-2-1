@@ -11,14 +11,14 @@ spring:
     driverClassName: org.postgresql.Driver
   data:
     mongodb:
-      uri: mongodb:/localhost:27017/tinkoff-hw-mongodb
+      uri: mongodb://localhost:27017/tinkoff-hw-mongodb
     redis:
       host: localhost
       port: 6379
       password: YXNkZmFzZGY=
   cache:
     type: redis
-    cache-names: redis-cacke
+    cache-names: redis-cache
     redis:
       time-to-live: 30000
   liquibase:
