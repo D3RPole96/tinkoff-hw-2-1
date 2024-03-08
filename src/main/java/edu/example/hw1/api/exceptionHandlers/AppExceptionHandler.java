@@ -1,8 +1,10 @@
 package edu.example.hw1.api.exceptionHandlers;
 
+import edu.example.hw1.api.exceptions.BadRequestException;
 import edu.example.hw1.api.exceptions.EntityNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.expression.AccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -48,6 +50,17 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException illegalArgumentException) {
         return handleException(illegalArgumentException.getCause().getLocalizedMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(AccessException.class)
+    public ResponseEntity<Object> handleAccessException(AccessException exception) {
+        return handleException("Доступ запрещен: " + exception.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Object> handleBadRequestException(BadRequestException exception) {
+        return handleException("Bad Request: " + exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 
     private ResponseEntity<Object> handleException(String exceptionMessage, HttpStatusCode status) {
         Map<String, Object> body = new HashMap<>();

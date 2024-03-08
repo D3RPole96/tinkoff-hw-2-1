@@ -47,3 +47,8 @@ logging:
   level:
     "liquibase": info
 
+application:
+  auth:
+    jwt:
+      secret-key: AC13E9DC05A0195C9FE3CC6BC81E4729A20AC2DF0AD680A4FAD3D3F961C07F72
+      expiration-timeout-milliseconds: 86400000
