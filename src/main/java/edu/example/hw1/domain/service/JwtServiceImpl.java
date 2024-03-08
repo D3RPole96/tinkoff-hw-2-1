@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +29,7 @@ public class JwtServiceImpl implements JwtService {
 
 
     @Override
-    public String getEmailFromToken(String jwtToken) {
+    public String getUsernameFromToken(String jwtToken) {
         return getClaim(jwtToken, Claims::getSubject);
     }
 
@@ -71,7 +70,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public boolean isTokenValid(String jwtToken, UserDetails userDetails) {
-        var userEmail = getEmailFromToken(jwtToken);
+        var userEmail = getUsernameFromToken(jwtToken);
 
         return (userEmail.equals(userDetails.getUsername())) && isTokenNotExpired(jwtToken);
     }

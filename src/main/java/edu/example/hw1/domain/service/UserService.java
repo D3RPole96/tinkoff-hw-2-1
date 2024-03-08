@@ -9,7 +9,7 @@ public interface UserService {
     UserEntity getUserById(Integer id);
     UserEntity getUserByUsername(String username);
     List<UserEntity> getAllUsers();
-    UserEntity addNewUser(UserEntity user);
+    List<UserEntity> getAllDeletedUsers();
     UserEntity deleteUserById(Integer id);
-    UserEntity deleteUserByUsername(String username);
+    UserEntity restoreUserById(Integer id);
 }

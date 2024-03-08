@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public interface JwtService {
-    String getEmailFromToken(String jwtToken);
+    String getUsernameFromToken(String jwtToken);
     String getRoleFromToken(String jwtToken);
     <T> T getClaim(String jwtToken, Function<Claims, T> claimsResolver);
     String generateToken(UserDetails userDetails);

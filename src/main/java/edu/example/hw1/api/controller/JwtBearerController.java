@@ -1,6 +1,6 @@
 package edu.example.hw1.api.controller;
 
-import edu.example.hw1.api.dto.jwt.JwtEmailResponseDto;
+import edu.example.hw1.api.dto.jwt.JwtUsernameResponseDto;
 import edu.example.hw1.api.dto.jwt.JwtRoleResponseDto;
 import edu.example.hw1.domain.service.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class JwtBearerController {
     private final JwtService jwtService;
 
-    @GetMapping("/email")
-    public JwtEmailResponseDto getEmailByJwt(@RequestHeader(HttpHeaders.AUTHORIZATION) String bearerToken) {
+    @GetMapping("/username")
+    public JwtUsernameResponseDto getUsernameByJwt(@RequestHeader(HttpHeaders.AUTHORIZATION) String bearerToken) {
         var jwtToken = bearerToken.substring("Bearer ".length());
-        var email = jwtService.getEmailFromToken(jwtToken);
+        var username = jwtService.getUsernameFromToken(jwtToken);
 
-        return new JwtEmailResponseDto(email);
+        return new JwtUsernameResponseDto(username);
     }
 
     @GetMapping("/role")

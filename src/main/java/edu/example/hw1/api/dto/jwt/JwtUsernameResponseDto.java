@@ -5,7 +5,7 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class JwtEmailResponseDto {
-    private String email;
+public class JwtUsernameResponseDto {
+    private String username;
 }
 
