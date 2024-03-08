@@ -20,6 +20,6 @@ public class OperationEntity {
     private OperationType type;
 
     public enum OperationType {
-        WRITE, READ, DELETE;
+        WRITE, READ;
     }
 }

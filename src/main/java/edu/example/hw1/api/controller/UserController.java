@@ -50,23 +50,15 @@ public class UserController {
         return userMapper.userEntitiesToUserResponseDtos(userService.getAllUsers());
     }
 
+    @GetMapping("/deleted")
+    @QueryMapping
+    public List<UserResponseDto> getAllDeletedUsers() {
+        return userMapper.userEntitiesToUserResponseDtos(userService.getAllDeletedUsers());
+    }
+
     @GetMapping("/{userId}/images")
     public List<ImageDto> getUserImages(@PathVariable @NotNull @Min(0) Integer userId) {
         return imageMapper.imageEntitiesToImageDtos(imageService.getUserImages(userId));
-    }
-
-    @PostMapping("/{userId}/image")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ImageDto getUserImages(@RequestParam MultipartFile file, @PathVariable @NotNull @Min(0) Integer userId) throws Exception {
-        return imageMapper.imageEntityToImageDto(imageService.uploadImageToUser(file, userId));
-    }
-
-    @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    @QueryMapping
-    public UserResponseDto addNewUser(@Argument @RequestBody @Valid UserCreateDto userCreateDto) {
-        var user = userMapper.userCreateDtoToUserEntity(userCreateDto);
-        return userMapper.toUserResponseDto(userService.addNewUser(user));
     }
 
     @DeleteMapping("/{id}")
@@ -75,9 +67,9 @@ public class UserController {
         return userMapper.toUserResponseDto(userService.deleteUserById(id));
     }
 
-    @DeleteMapping("/username/{username}")
+    @PostMapping("{id}/restore")
     @QueryMapping
-    public UserResponseDto deleteUserByUsername(@Argument @PathVariable @NotBlank @NotNull @Size(max = 255) String username) {
-        return userMapper.toUserResponseDto(userService.deleteUserByUsername(username));
+    public UserResponseDto restoreUserById(@Argument @PathVariable @NotNull @Min(0) Integer id) {
+        return userMapper.toUserResponseDto(userService.restoreUserById(id));
     }
 }

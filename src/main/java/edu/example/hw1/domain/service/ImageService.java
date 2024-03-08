@@ -10,7 +10,6 @@ public interface ImageService {
     List<ImageEntity> getAllImages();
     ImageEntity getImageMeta(int id);
     byte[] downloadImage(String link) throws Exception;
-    ImageEntity uploadImage(MultipartFile file) throws Exception;
-    ImageEntity uploadImageToUser(MultipartFile file, Integer userId) throws Exception;
+    ImageEntity uploadImageToUser(MultipartFile file, String authorUsername) throws Exception;
     List<ImageEntity> getUserImages(int userId);
 }

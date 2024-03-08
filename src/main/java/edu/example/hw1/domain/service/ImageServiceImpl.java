@@ -62,24 +62,8 @@ public class ImageServiceImpl implements ImageService {
 
     @Cacheable(value = "ImageService::getImageMeta", key = "#file.originalFilename")
     @Override
-    public ImageEntity uploadImage(MultipartFile file) throws Exception {
-        var image = minioService.uploadImage(file);
-        imageRepository.save(image);
-
-        operationService.logOperation(
-                new OperationDto(
-                        String.format("Upload image: %s", image),
-                        LocalDateTime.now(ZoneOffset.UTC).toString(),
-                        OperationEntity.OperationType.WRITE.toString()
-                )
-        );
-
-        return image;
-    }
-
-    @Override
-    public ImageEntity uploadImageToUser(MultipartFile file, Integer userId) throws Exception {
-        var user = userService.getUserById(userId);
+    public ImageEntity uploadImageToUser(MultipartFile file, String authorUsername) throws Exception {
+        var user = userService.getUserByUsername(authorUsername);
         var image = minioService.uploadImage(file);
         image.setUser(user);
 
@@ -87,7 +71,7 @@ public class ImageServiceImpl implements ImageService {
 
         operationService.logOperation(
                 new OperationDto(
-                        String.format("Upload image: %s, to user %d", image, userId),
+                        String.format("Upload image: %s, to user %s", image, user.getUsername()),
                         LocalDateTime.now(ZoneOffset.UTC).toString(),
                         OperationEntity.OperationType.WRITE.toString()
                 )

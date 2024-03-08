@@ -1,6 +1,7 @@
 package edu.example.hw1.domain.service;
 
 import edu.example.hw1.api.dto.OperationDto;
+import edu.example.hw1.api.exceptions.BadRequestException;
 import edu.example.hw1.api.exceptions.EntityNotFoundException;
 import edu.example.hw1.domain.entity.ImageEntity;
 import edu.example.hw1.domain.entity.OperationEntity.OperationType;
@@ -27,6 +28,10 @@ public class UserServiceImpl implements UserService {
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь с указанным ID не найден"));
 
+        if (user.isDeleted()) {
+            throw new EntityNotFoundException("Пользователь с указанным ID удален");
+        }
+
         operationService.logOperation(
                 new OperationDto(
                         String.format("Read user: %s", user),
@@ -45,6 +50,10 @@ public class UserServiceImpl implements UserService {
                 .findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь с указанным именем пользователя не найден"));
 
+        if (user.isDeleted()) {
+            throw new EntityNotFoundException("Пользователь с указанным именем пользователя удален");
+        }
+
         operationService.logOperation(
                 new OperationDto(
                         String.format("Read user: %s", user),
@@ -59,7 +68,7 @@ public class UserServiceImpl implements UserService {
     @Cacheable(value = "UserService::getAllUsers")
     @Override
     public List<UserEntity> getAllUsers() {
-        var users = userRepository.findAll();
+        var users = userRepository.findAllByIsDeletedIsFalse();
 
         operationService.logOperation(
                 new OperationDto(
@@ -72,51 +81,67 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
+    @Cacheable(value = "UserService::getAllDeletedUsers")
     @Override
-    public UserEntity addNewUser(UserEntity user) {
-        user.setCreationTime(LocalDateTime.now(ZoneOffset.UTC));
-        var addedUser = userRepository.save(user);
+    public List<UserEntity> getAllDeletedUsers() {
+        var users = userRepository.findAllByIsDeletedIsTrue();
 
         operationService.logOperation(
                 new OperationDto(
-                        String.format("Create user: %s", addedUser),
+                        String.format("Read deleted users: %s", users),
+                        LocalDateTime.now(ZoneOffset.UTC).toString(),
+                        OperationType.READ.toString()
+                )
+        );
+
+        return users;
+    }
+
+    @Override
+    public UserEntity deleteUserById(Integer id) {
+        var deletedUser = userRepository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь с указанным ID не найден"));
+
+        if (deletedUser.isDeleted()) {
+            throw new BadRequestException("Пользователь с указанным ID уже удален");
+        }
+
+        deletedUser.setDeleted(true);
+        userRepository.save(deletedUser);
+
+        operationService.logOperation(
+                new OperationDto(
+                        String.format("Deleted user: %s", deletedUser),
                         LocalDateTime.now(ZoneOffset.UTC).toString(),
                         OperationType.WRITE.toString()
                 )
         );
 
-        return addedUser;
-    }
-
-    @Override
-    public UserEntity deleteUserById(Integer id) {
-        var deletedUser = getUserById(id);
-        userRepository.deleteById(id);
-
-        operationService.logOperation(
-                new OperationDto(
-                        String.format("Deleted user: %s", deletedUser),
-                        LocalDateTime.now(ZoneOffset.UTC).toString(),
-                        OperationType.DELETE.toString()
-                )
-        );
-
         return deletedUser;
     }
 
     @Override
-    public UserEntity deleteUserByUsername(String username) {
-        var deletedUser = getUserByUsername(username);
-        userRepository.deleteByUsername(username);
+    public UserEntity restoreUserById(Integer id) {
+        var restoredUser = userRepository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь с указанным ID не найден"));
+
+        if (!restoredUser.isDeleted()) {
+            throw new BadRequestException("Пользователь с указанным ID не удален");
+        }
+
+        restoredUser.setDeleted(false);
+        userRepository.save(restoredUser);
 
         operationService.logOperation(
                 new OperationDto(
-                        String.format("Deleted user: %s", deletedUser),
+                        String.format("Restored user: %s", restoredUser),
                         LocalDateTime.now(ZoneOffset.UTC).toString(),
-                        OperationType.DELETE.toString()
+                        OperationType.WRITE.toString()
                 )
         );
 
-        return deletedUser;
+        return restoredUser;
     }
 }
