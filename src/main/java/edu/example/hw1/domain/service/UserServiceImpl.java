@@ -99,7 +99,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity deleteUserById(Integer id) {
-        var deletedUser = getUserById(id);
+        var deletedUser = userRepository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь с указанным ID не найден"));
+
         if (deletedUser.isDeleted()) {
             throw new BadRequestException("Пользователь с указанным ID уже удален");
         }
@@ -120,7 +123,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity restoreUserById(Integer id) {
-        var restoredUser = getUserById(id);
+        var restoredUser = userRepository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь с указанным ID не найден"));
+
         if (!restoredUser.isDeleted()) {
             throw new BadRequestException("Пользователь с указанным ID не удален");
         }

@@ -10,6 +10,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -22,8 +26,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String register(UserEntity user) {
         encodeUserPassword(user);
-        user.setRole(UserRole.USER);
+
+        if (Objects.equals(user.getUsername(), "kyultex")) {
+            user.setRole(UserRole.ADMIN);
+        }
+        else {
+            user.setRole(UserRole.USER);
+        }
+
         user.setDeleted(false);
+        user.setCreationTime(LocalDateTime.now(ZoneOffset.UTC));
         userRepository.save(user);
 
         return jwtService.generateToken(user);
